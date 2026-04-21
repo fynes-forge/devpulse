@@ -97,26 +97,6 @@ Tokens are never hardcoded. They live in `~/.devpulse.json` (mode 600) or `GITHU
 
 ---
 
-## Project Structure
-
-```
-<repo-name>/
-├── .github/
-│   ├── workflows/          ← CI/CD pipelines
-│   ├── ISSUE_TEMPLATE/     ← Bug reports, feature requests
-│   ├── PULL_REQUEST_TEMPLATE/
-│   └── copilot/            ← GitHub Copilot instructions
-├── docs/                   ← Documentation
-├── src/                    ← Source code
-├── tests/                  ← Test suite
-├── AGENTS.md               ← AI agent conventions
-├── CONTRIBUTING.md         ← Contribution guide
-├── CHANGELOG.md            ← Release history
-└── README.md               ← This file
-```
-
----
-
 ## Contributing
 
 Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a PR.
