@@ -1,6 +1,9 @@
 # forge-template
 
-> **Fynes Forge** · Official repository template. Replace this line with a one-sentence description of what this repo does.
+> Your GitHub activity dashboard in the terminal.
+
+A persistent cockpit for monitoring open PRs, CI status, and repository health — without leaving your editor.
+
 
 ---
 
@@ -16,45 +19,81 @@
 
 ## Overview
 
-<!-- Replace this section with a clear description of the project.
-     Answer: what does it do, who is it for, and why does it exist? -->
+Developed as part of the Fynes-Forge blog, this lightweight cli provides a clean and perisitant dashboard for your Github activity.
 
 This is a Fynes Forge project built with **precision over cleverness**.
 
 ---
 
-## Getting Started
-
-See [GETTING_STARTED.md](./docs/GETTING_STARTED.md) for full setup instructions.
-
-**Quick start:**
+## Quick Start
 
 ```bash
-# Clone the repo
-git clone https://github.com/fynes-forge/<repo-name>.git
-cd <repo-name>
+# Install with uv
+uv tool install .
 
-# Install dependencies
-pip install -r requirements.txt   # Python
-# or
-npm install                        # Node / TypeScript
-
-# Run
-python src/main.py
-# or
-npm start
+# Or run directly during development
+uv run devpulse --help
 ```
 
----
+## Setup
 
-## Documentation
+```bash
+devpulse login
+```
 
-| Document | Description |
-|---|---|
-| [GETTING_STARTED.md](./docs/GETTING_STARTED.md) | Installation, setup, and first run |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | How to contribute to this project |
-| [CHANGELOG.md](./CHANGELOG.md) | Version history and release notes |
-| [AGENTS.md](./AGENTS.md) | AI agent context and conventions |
+Prompts for a [GitHub Personal Access Token](https://github.com/settings/tokens). Requires `repo` and `read:org` scopes. Saved to `~/.devpulse.json`.
+
+Alternatively, set the `GITHUB_TOKEN` environment variable — it takes priority over the config file.
+
+## Commands
+
+```bash
+# Summary of a repository (formatted)
+devpulse summary astral-sh/uv
+
+# Raw JSON output (pipe-friendly)
+devpulse summary astral-sh/uv --raw
+
+# Full pulse dashboard
+devpulse pulse astral-sh/uv
+
+# Launch interactive TUI
+devpulse ui
+# or
+devpulse-ui
+```
+
+## Tech Stack
+
+- **[Typer](https://typer.tiangolo.com/)** — CLI framework
+- **[httpx](https://www.python-httpx.org/)** — Async-capable HTTP client
+- **[Rich](https://rich.readthedocs.io/)** — Terminal formatting & layout
+- **[Textual](https://textual.textualize.io/)** — Interactive TUI framework
+- **[Pydantic](https://docs.pydantic.dev/)** — Config validation
+
+## Project Structure
+
+```
+src/devpulse/
+├── __init__.py
+├── cli.py        # Typer command definitions
+├── client.py     # GitHub API logic (sync + async)
+├── config.py     # Token management
+├── renderer.py   # Rich formatting (shared between CLI and TUI)
+└── tui.py        # Textual app and widgets
+```
+
+## Blog Series
+
+This project was built as part of a three-part blog series on [Fynes Forge](https://fynes-forge.github.io):
+
+- **Part 1: The Skeleton** — Typer + httpx + GitHub API
+- **Part 2: The Facelift** — Rich tables, panels, and dashboards
+- **Part 3: The Cockpit** — Textual interactive TUI
+
+## Security
+
+Tokens are never hardcoded. They live in `~/.devpulse.json` (mode 600) or `GITHUB_TOKEN`. The config file is gitignored by default.
 
 ---
 

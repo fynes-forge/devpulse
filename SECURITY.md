@@ -6,7 +6,7 @@
 
 If you discover a security issue in a Fynes Forge project, please report it responsibly:
 
-1. Email **tf.dev@icloud.com** with the subject line: `[SECURITY] <repo-name> — <short description>`
+1. Email **contact@fynesforge.com** with the subject line: `[SECURITY] <repo-name> — <short description>`
 2. Include: a description of the vulnerability, steps to reproduce, and the potential impact
 3. You will receive a response within 5 business days
 
