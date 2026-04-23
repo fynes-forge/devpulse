@@ -1,4 +1,3 @@
-"""DevPulse configuration — token loading and persistence."""
 from __future__ import annotations
 
 import json
@@ -46,7 +45,8 @@ def save_config(config: DevPulseConfig) -> None:
 def save_token(token: str) -> None:
     """Save a token, preserving any existing pinned repos."""
     existing = load_config()
-    pinned = existing.pinned_repos if existing else DevPulseConfig.__fields__["pinned_repos"].default
+    pinned = existing.pinned_repos if existing else DevPulseConfig.__fields__[
+        "pinned_repos"].default
     save_config(DevPulseConfig(github_token=token, pinned_repos=pinned))
 
 

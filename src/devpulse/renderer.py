@@ -1,8 +1,3 @@
-"""Rich rendering — all terminal formatting lives here.
-
-Shared between the Typer CLI commands and the Textual TUI widgets.
-Neither cli.py nor tui.py should import Rich directly.
-"""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -129,7 +124,8 @@ def render_pr_table(prs: list[dict]) -> Table:
     table.add_column("Title", style=COLORS["text"], ratio=3)
     table.add_column("Author", style=COLORS["mauve"], width=18)
     table.add_column("Labels", ratio=2)
-    table.add_column("Opened", style=COLORS["subtext"], width=12, justify="right")
+    table.add_column(
+        "Opened", style=COLORS["subtext"], width=12, justify="right")
 
     for pr in prs:
         labels = _format_pr_labels(pr.get("labels", []))
@@ -219,12 +215,14 @@ def render_pulse_dashboard(repo: dict, prs: list[dict], runs: list[dict]) -> Non
     )
     if prs:
         layout["prs"].update(
-            Panel(render_pr_table(prs), title=pr_title, border_style=COLORS["surface"])
+            Panel(render_pr_table(prs), title=pr_title,
+                  border_style=COLORS["surface"])
         )
     else:
         layout["prs"].update(
             Panel(
-                Text("No open pull requests 🎉", style=COLORS["green"], justify="center"),
+                Text("No open pull requests 🎉",
+                     style=COLORS["green"], justify="center"),
                 title=pr_title,
                 border_style=COLORS["surface"],
             )
@@ -242,7 +240,8 @@ def render_pulse_dashboard(repo: dict, prs: list[dict], runs: list[dict]) -> Non
     else:
         layout["ci"].update(
             Panel(
-                Text("No workflow runs found.", style=COLORS["subtext"], justify="center"),
+                Text("No workflow runs found.",
+                     style=COLORS["subtext"], justify="center"),
                 title=ci_title,
                 border_style=COLORS["surface"],
             )

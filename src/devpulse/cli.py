@@ -1,4 +1,3 @@
-"""DevPulse CLI — Typer command definitions."""
 from __future__ import annotations
 
 import json
@@ -116,12 +115,14 @@ def pulse(
 
 @app.command()
 def pin(
-    repo: str = typer.Argument(help="Repository to pin, e.g. [bold]astral-sh/uv[/]"),
+    repo: str = typer.Argument(
+        help="Repository to pin, e.g. [bold]astral-sh/uv[/]"),
 ) -> None:
     """Pin a repository to your DevPulse dashboard."""
     config = load_config()
     if config is None:
-        console.print("[bold red]Not logged in.[/] Run [bold]devpulse login[/] first.")
+        console.print(
+            "[bold red]Not logged in.[/] Run [bold]devpulse login[/] first.")
         raise typer.Exit(code=1)
 
     if add_pinned_repo(repo):
@@ -146,14 +147,17 @@ def repos() -> None:
     """List your pinned repositories."""
     config = load_config()
     if config is None:
-        console.print("[bold red]Not logged in.[/] Run [bold]devpulse login[/] first.")
+        console.print(
+            "[bold red]Not logged in.[/] Run [bold]devpulse login[/] first.")
         raise typer.Exit(code=1)
 
     if not config.pinned_repos:
-        console.print("[dim]No pinned repositories. Use [bold]devpulse pin owner/repo[/] to add one.[/]")
+        console.print(
+            "[dim]No pinned repositories. Use [bold]devpulse pin owner/repo[/] to add one.[/]")
         return
 
-    console.print(f"\n[bold]📌 Pinned Repositories[/] [{len(config.pinned_repos)}]\n")
+    console.print(
+        f"\n[bold]📌 Pinned Repositories[/] [{len(config.pinned_repos)}]\n")
     for repo in config.pinned_repos:
         console.print(f"  [bold]{repo}[/]")
     console.print()

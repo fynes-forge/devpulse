@@ -1,4 +1,3 @@
-"""GitHub API clients — synchronous (Typer) and async (Textual)."""
 from __future__ import annotations
 
 import httpx
@@ -55,7 +54,8 @@ class GitHubClient:
         if response.status_code == 404:
             raise GitHubAPIError(f"Not found: {path}")
         if response.status_code == 401:
-            raise GitHubAPIError("Authentication failed. Run `devpulse login` to refresh your token.")
+            raise GitHubAPIError(
+                "Authentication failed. Run `devpulse login` to refresh your token.")
         response.raise_for_status()
         _check_rate_limit(response)
         return response
@@ -105,7 +105,8 @@ class AsyncGitHubClient:
         if response.status_code == 404:
             raise GitHubAPIError(f"Not found: {path}")
         if response.status_code == 401:
-            raise GitHubAPIError("Authentication failed. Run `devpulse login` to refresh your token.")
+            raise GitHubAPIError(
+                "Authentication failed. Run `devpulse login` to refresh your token.")
         response.raise_for_status()
         _check_rate_limit(response)
         return response
@@ -121,6 +122,40 @@ class AsyncGitHubClient:
 
     async def get_workflow_runs(self, repo: str) -> list[dict]:
         return (await self._get(f"/repos/{repo}/actions/runs", per_page=10)).json().get("workflow_runs", [])
+
+    async def get_user_repos(self) -> list[dict]:
+        """Fetch all repos the authenticated user has access to, sorted by push date."""
+        all_repos: list[dict] = []
+        page = 1
+        while True:
+            resp = await self._client.get(
+                "/user/repos",
+                params={"sort": "pushed", "per_page": 100, "page": page,
+                        "affiliation": "owner,collaborator,organization_member"},
+            )
+            if resp.status_code in (401, 403):
+                raise GitHubAPIError("Authentication failed.")
+            resp.raise_for_status()
+            batch = resp.json()
+            if not batch:
+                break
+            all_repos.extend(batch)
+            # Stop at 300 repos to avoid hammering the API
+            if len(all_repos) >= 300 or len(batch) < 100:
+                break
+            page += 1
+        return all_repos
+
+    async def get_commit_activity(self, repo: str) -> list[dict]:
+        """Weekly commit counts for the last year. Returns [] if GitHub is still computing (202)."""
+        try:
+            resp = await self._client.get(f"/repos/{repo}/stats/commit_activity")
+            if resp.status_code == 202:
+                return []
+            resp.raise_for_status()
+            return resp.json() or []
+        except Exception:
+            return []
 
     async def close(self) -> None:
         await self._client.aclose()
